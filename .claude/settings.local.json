@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp \"c:/Users/User/Desktop/NVstudio müqavilə admin panel/logo.png\" \"c:/Users/User/Desktop/NVstudio müqavilə admin panel/public/logo.png\" && echo \"copied\")"
+    ]
+  }
+}
