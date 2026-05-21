@@ -113,9 +113,8 @@ function Sparkline({ rising, color }) {
   )
 }
 
-export default function StatsCards() {
   return (
-    <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
       {CARDS.map((card, i) => (
         <div key={i}
           className="bg-white border border-[#e8edf5] rounded-2xl p-5 hover:shadow-lg hover:-translate-y-0.5
