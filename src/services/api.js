@@ -1,7 +1,17 @@
 const BASE = 'https://nv-st-m-qavile-production.up.railway.app'
 
-const API_TO_UI = { 'Aktiv': 'Aktiv', 'Gozleyir': 'Gözləyən', 'Redd Edildi': 'Rədd Edildi' }
-const UI_TO_API = { 'Aktiv': 'Aktiv', 'Gözləyən': 'Gozleyir', 'Rədd Edildi': 'Redd Edildi' }
+const API_TO_UI = {
+  'Aktiv': 'Aktiv',
+  'Gozleyir': 'Gözləyən',
+  'Redd Edildi': 'Rədd Edildi',
+  'Reddedildi': 'Rədd Edildi',
+}
+const UI_TO_API = {
+  'Aktiv': 'Aktiv',
+  'Gözləyən': 'Gozleyir',
+  'Rədd Edildi': 'Reddedildi',
+  'Redd Edildi': 'Reddedildi',
+}
 
 export function mapItem(item) {
   return {

@@ -208,19 +208,7 @@ export default function ContractsTable({
       {/* Table — no horizontal scroll, fixed layout fills 100% */}
       <div className="w-full overflow-x-hidden">
         <table className="w-full" style={{ tableLayout: 'fixed', borderCollapse: 'collapse' }}>
-          <colgroup>
-            <col style={{ width: '13%' }} />  {/* Ad Soyad */}
-            <col style={{ width: '7%' }} />   {/* Ata Adı */}
-            <col style={{ width: '8%' }} />   {/* FİN */}
-            <col style={{ width: '9%' }} />   {/* Telefon */}
-            <col style={{ width: '13%' }} />  {/* Email */}
-            <col style={{ width: '9%' }} />   {/* Ünvan */}
-            <col style={{ width: '10%' }} />  {/* Vəzifə */}
-            <col style={{ width: '10%' }} />  {/* Elektron İmza */}
-            <col style={{ width: '11%' }} />  {/* Müqavilə Adı */}
-            <col style={{ width: '8%' }} />   {/* Status */}
-            <col style={{ width: '3%' }} />   {/* Actions */}
-          </colgroup>
+          <colgroup><col style={{ width: '13%' }} /><col style={{ width: '7%' }} /><col style={{ width: '8%' }} /><col style={{ width: '9%' }} /><col style={{ width: '13%' }} /><col style={{ width: '9%' }} /><col style={{ width: '10%' }} /><col style={{ width: '10%' }} /><col style={{ width: '11%' }} /><col style={{ width: '8%' }} /><col style={{ width: '3%' }} /></colgroup>
           <thead>
             <tr style={{ background: 'linear-gradient(180deg,#f8fafc 0%,#f1f5f9 100%)' }}
               className="border-b border-[#e8edf5]">
