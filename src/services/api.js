@@ -17,6 +17,7 @@ export function mapItem(item) {
     contractFile: item.contractFile || null,
     status: API_TO_UI[item.status] ?? item.status,
     date: item.createdAt ? new Date(item.createdAt).toLocaleDateString('az-AZ') : '',
+    createdAtISO: item.createdAt || null,
   }
 }
 

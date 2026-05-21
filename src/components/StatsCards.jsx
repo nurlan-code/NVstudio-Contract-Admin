@@ -1,69 +1,90 @@
-const CARDS = [
-  {
-    label: 'Ümumi İstifadəçilər',
-    value: '1,248',
-    change: '+12% bu ay',
-    positive: true,
-    gradient: 'linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%)',
-    iconColor: '#3b82f6',
-    sparkColor: '#3b82f6',
-    rising: true,
-    icon: (
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
-        <path strokeLinecap="round" strokeLinejoin="round"
-          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Aktiv İstifadəçilər',
-    value: '842',
-    change: '+8% bu ay',
-    positive: true,
-    gradient: 'linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)',
-    iconColor: '#16a34a',
-    sparkColor: '#22c55e',
-    rising: true,
-    icon: (
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
-        <path strokeLinecap="round" strokeLinejoin="round"
-          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Rədd Edilənlər',
-    value: '210',
-    change: '-5% bu ay',
-    positive: false,
-    gradient: 'linear-gradient(135deg, #fee2e2 0%, #fff5f5 100%)',
-    iconColor: '#dc2626',
-    sparkColor: '#ef4444',
-    rising: false,
-    icon: (
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
-        <path strokeLinecap="round" strokeLinejoin="round"
-          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Gözləyənlər',
-    value: '196',
-    change: '+3% bu ay',
-    positive: true,
-    gradient: 'linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%)',
-    iconColor: '#d97706',
-    sparkColor: '#f59e0b',
-    rising: true,
-    icon: (
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
-        <path strokeLinecap="round" strokeLinejoin="round"
-          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-  },
-]
+function fmtChange(n) {
+  if (typeof n !== 'number') return '0% bu ay'
+  const sign = n > 0 ? '+' : ''
+  return `${sign}${n}% bu ay`
+}
+
+const ICONS = {
+  users: (
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
+      <path strokeLinecap="round" strokeLinejoin="round"
+        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  ),
+  active: (
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
+      <path strokeLinecap="round" strokeLinejoin="round"
+        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+  rejected: (
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
+      <path strokeLinecap="round" strokeLinejoin="round"
+        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+  pending: (
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
+      <path strokeLinecap="round" strokeLinejoin="round"
+        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+}
+
+export default function StatsCards({ stats }) {
+  const total = stats?.total ?? 0
+  const active = stats?.active ?? 0
+  const rejected = stats?.rejected ?? 0
+  const pending = stats?.pending ?? 0
+
+  const changes = stats?.changes || {}
+
+  const CARDS = [
+    {
+      label: 'Ümumi İstifadəçilər',
+      value: total.toLocaleString('en-US'),
+      change: fmtChange(changes.total),
+      positive: (changes.total ?? 0) >= 0,
+      gradient: 'linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%)',
+      iconColor: '#3b82f6',
+      sparkColor: '#3b82f6',
+      rising: (changes.total ?? 0) >= 0,
+      icon: ICONS.users,
+    },
+    {
+      label: 'Aktiv İstifadəçilər',
+      value: active.toLocaleString('en-US'),
+      change: fmtChange(changes.active),
+      positive: (changes.active ?? 0) >= 0,
+      gradient: 'linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)',
+      iconColor: '#16a34a',
+      sparkColor: '#22c55e',
+      rising: (changes.active ?? 0) >= 0,
+      icon: ICONS.active,
+    },
+    {
+      label: 'Rədd Edilənlər',
+      value: rejected.toLocaleString('en-US'),
+      change: fmtChange(changes.rejected),
+      positive: (changes.rejected ?? 0) >= 0,
+      gradient: 'linear-gradient(135deg, #fee2e2 0%, #fff5f5 100%)',
+      iconColor: '#dc2626',
+      sparkColor: '#ef4444',
+      rising: (changes.rejected ?? 0) >= 0,
+      icon: ICONS.rejected,
+    },
+    {
+      label: 'Gözləyənlər',
+      value: pending.toLocaleString('en-US'),
+      change: fmtChange(changes.pending),
+      positive: (changes.pending ?? 0) >= 0,
+      gradient: 'linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%)',
+      iconColor: '#d97706',
+      sparkColor: '#f59e0b',
+      rising: (changes.pending ?? 0) >= 0,
+      icon: ICONS.pending,
+    },
+  ]
 
 function Sparkline({ rising, color }) {
   const id = `sg-${color.replace('#', '')}`

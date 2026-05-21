@@ -86,6 +86,64 @@ export default function App() {
     }
   }
 
+  const stats = useMemo(() => {
+    const total = data.length
+    const active = data.filter(i => i.status === 'Aktiv').length
+    const rejected = data.filter(i => i.status === 'Rədd Edildi').length
+    const pending = data.filter(i => i.status === 'Gözləyən').length
+
+    // month keys like '2026-5'
+    const now = new Date()
+    const thisKey = `${now.getFullYear()}-${now.getMonth() + 1}`
+    const prevDate = new Date(now.getFullYear(), now.getMonth() - 1)
+    const prevKey = `${prevDate.getFullYear()}-${prevDate.getMonth() + 1}`
+
+    function monthKey(iso) {
+      if (!iso) return null
+      const d = new Date(iso)
+      return `${d.getFullYear()}-${d.getMonth() + 1}`
+    }
+
+    const counts = {
+      totalCurr: 0, totalPrev: 0,
+      activeCurr: 0, activePrev: 0,
+      rejectedCurr: 0, rejectedPrev: 0,
+      pendingCurr: 0, pendingPrev: 0,
+    }
+
+    data.forEach(item => {
+      const key = monthKey(item.createdAtISO)
+      if (!key) return
+      if (key === thisKey) {
+        counts.totalCurr++
+        if (item.status === 'Aktiv') counts.activeCurr++
+        if (item.status === 'Rədd Edildi') counts.rejectedCurr++
+        if (item.status === 'Gözləyən') counts.pendingCurr++
+      }
+      if (key === prevKey) {
+        counts.totalPrev++
+        if (item.status === 'Aktiv') counts.activePrev++
+        if (item.status === 'Rədd Edildi') counts.rejectedPrev++
+        if (item.status === 'Gözləyən') counts.pendingPrev++
+      }
+    })
+
+    function pct(curr, prev) {
+      if (prev === 0) return curr === 0 ? 0 : 100
+      return Math.round(((curr - prev) / prev) * 100)
+    }
+
+    return {
+      total, active, rejected, pending,
+      changes: {
+        total: pct(counts.totalCurr, counts.totalPrev),
+        active: pct(counts.activeCurr, counts.activePrev),
+        rejected: pct(counts.rejectedCurr, counts.rejectedPrev),
+        pending: pct(counts.pendingCurr, counts.pendingPrev),
+      }
+    }
+  }, [data])
+
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: '#f0f4fb' }}>
       <Sidebar />
@@ -95,7 +153,7 @@ export default function App() {
           onSearchChange={v => { setSearchQuery(v); setCurrentPage(1) }}
         />
         <main className="flex-1 p-6 space-y-5 overflow-y-auto">
-          <StatsCards />
+          <StatsCards stats={stats} />
 
           {loading ? (
             <div className="bg-white rounded-2xl border border-[#e8edf5] flex items-center justify-center py-24"
