@@ -45,3 +45,21 @@ export async function updateDashboardStatus(id, uiStatus) {
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   return res.text().then(t => t ? JSON.parse(t) : null)
 }
+
+export async function deleteDashboardItem(id) {
+  const res = await fetch(`${BASE}/api/admin/Dashboard/${id}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+  })
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  return res.text().then(t => t ? JSON.parse(t) : null)
+}
+
+export async function deleteAllDashboardItems() {
+  const res = await fetch(`${BASE}/api/admin/Dashboard/all`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+  })
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  return res.json()
+}

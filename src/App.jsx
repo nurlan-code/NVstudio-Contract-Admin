@@ -5,7 +5,7 @@ import Header from './components/Header'
 import StatsCards from './components/StatsCards'
 import ContractsTable from './components/ContractsTable'
 import DeleteModal from './components/DeleteModal'
-import { fetchDashboard, updateDashboardStatus, mapItem } from './services/api'
+import { fetchDashboard, updateDashboardStatus, deleteDashboardItem, mapItem } from './services/api'
 
 export default function App() {
   const [data, setData] = useState([])
@@ -67,13 +67,23 @@ export default function App() {
 
   const handleDeleteRequest = (id, name) => setDeleteModal({ open: true, id, name })
 
-  const handleDeleteConfirm = () => {
-    setData(prev => prev.filter(item => item.id !== deleteModal.id))
+  const handleDeleteConfirm = async () => {
+    const snapshot = data
+    const deletingId = deleteModal.id
+    setData(prev => prev.filter(item => item.id !== deletingId))
     const remaining = filteredData.length - 1
     const newTotal = Math.max(1, Math.ceil(remaining / rowsPerPage))
     if (currentPage > newTotal) setCurrentPage(newTotal)
     setDeleteModal({ open: false, id: null, name: '' })
-    toast.success('Müqavilə silindi', { duration: 2800 })
+    
+    try {
+      await deleteDashboardItem(deletingId)
+      toast.success('Müqavilə silindi', { duration: 2800 })
+    } catch {
+      setData(snapshot)
+      toast.error('Müqavilə silinmədi. Yenidən cəhd edin.', { duration: 2800 })
+      setDeleteModal({ open: true, id: deletingId, name: deleteModal.name })
+    }
   }
 
   return (
